@@ -11,7 +11,7 @@ import {
 import { motion } from "framer-motion";
 
 export function FeedingSchedule() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate] = useState(new Date());
 
   const schedule = [
     {
@@ -90,22 +90,21 @@ export function FeedingSchedule() {
   return (
     <div className="space-y-8">
       {/* Header Image Banner */}
-      <div className="relative h-64 rounded-3xl overflow-hidden shadow-xl group">
-        <img
-          src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?auto=format&fit=crop&q=80&w=2000"
-          alt="Feeding Schedule Banner"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+      <div className="relative h-64 rounded-3xl overflow-hidden shadow-xl group bg-gradient-to-r from-farm-green-900 to-farm-green-700">
+        <div 
+          className="absolute inset-0 opacity-20 transition-transform duration-700 group-hover:scale-105" 
+          style={{ backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.4) 1px, transparent 0)", backgroundSize: "32px 32px" }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-farm-green-900/90 to-farm-green-800/70 flex items-center justify-between p-8 md:p-12">
+        <div className="absolute inset-0 bg-farm-green-900/40 flex items-center justify-between p-8 md:p-12 z-10">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             className="max-w-xl"
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold font-roboto text-white mb-4">
               Horario de Alimentación
             </h1>
-            <p className="text-farm-green-100 text-lg mb-8">
+            <p className="text-farm-green-100 font-inter text-lg mb-8">
               Controla, asigna y monitorea la distribución de alimentos en
               tiempo real.
             </p>
@@ -113,8 +112,8 @@ export function FeedingSchedule() {
               <div className="bg-white/20 backdrop-blur-sm p-3 rounded-xl border border-white/20 text-white">
                 <Clock className="w-6 h-6" />
               </div>
-              <div className="text-white">
-                <p className="text-sm opacity-80">Próxima ración</p>
+              <div className="text-white font-inter">
+                <p className="text-sm opacity-80 uppercase tracking-wider">Próxima ración</p>
                 <p className="font-bold text-lg">12:00 PM</p>
               </div>
             </div>
@@ -122,9 +121,9 @@ export function FeedingSchedule() {
           <motion.button
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="hidden lg:flex items-center gap-2 bg-white text-farm-green-900 hover:bg-farm-green-50 px-8 py-3 rounded-xl font-bold shadow-lg transition-all transform hover:scale-105"
+            className="hidden lg:flex items-center justify-center gap-2 min-h-[44px] bg-white text-farm-green-900 hover:bg-farm-green-50 px-8 py-3 rounded-xl font-bold font-inter shadow-lg transition-all transform hover:scale-105"
           >
-            <Calendar className="w-5 h-5" />
+            <Calendar className="w-5 h-5 flex-shrink-0" />
             Nueva Agenda
           </motion.button>
         </div>
@@ -142,10 +141,10 @@ export function FeedingSchedule() {
         </motion.div>
 
         <div className="flex items-center gap-4 bg-white p-2.5 rounded-2xl border border-gray-100 shadow-sm">
-          <button className="p-2 hover:bg-farm-green-50 rounded-xl text-farm-green-600 transition-colors cursor-pointer">
-            <Calendar className="w-5 h-5" />
+          <button className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-farm-green-50 rounded-xl text-farm-green-600 transition-colors cursor-pointer">
+            <Calendar className="w-5 h-5 mx-auto" />
           </button>
-          <span className="font-medium text-farm-green-900 pr-3">
+          <span className="font-medium font-inter text-farm-green-900 pr-3">
             {selectedDate.toLocaleDateString()}
           </span>
         </div>
@@ -214,8 +213,8 @@ export function FeedingSchedule() {
                   </div>
                 </div>
 
-                <div className="p-2 rounded-full hover:bg-white text-gray-300 group-hover:text-farm-green-500 transition-colors">
-                  <ChevronRight className="w-5 h-5" />
+                <div className="p-3 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl hover:bg-white text-gray-300 group-hover:text-farm-green-500 transition-colors cursor-pointer">
+                  <ChevronRight className="w-5 h-5 mx-auto" />
                 </div>
               </motion.div>
             ))}

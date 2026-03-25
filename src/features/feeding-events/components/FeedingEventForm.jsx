@@ -63,29 +63,25 @@ export function FeedingEventForm({ farmId, onCancel, onSuccess }) {
       className="w-full my-4 md:my-6 bg-white rounded-2xl md:rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden"
     >
       {/* Header Area */}
-      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl group shadow-lg">
-        <div
-          className="relative min-h-[180px] md:h-48 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1545468800-85cc9bc6ecf7?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3')`,
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-green-900/90 via-emerald-800/85 to-teal-900/90" />
-          <div className="relative h-full flex flex-col justify-center px-6 md:px-8 py-6 md:py-0 text-white">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-green-300/20 rounded-xl backdrop-blur-md">
-                    <Zap className="w-6 h-6 md:w-8 md:h-8 text-green-300" />
-                  </div>
-                  <h2 className="text-xl md:text-3xl font-bold tracking-tight">
-                    Registrar Evento
-                  </h2>
+      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl group shadow-lg bg-gradient-to-r from-farm-green-900 via-farm-emerald-600 to-farm-teal-500 min-h-[180px] md:h-48">
+        <div 
+          className="absolute inset-0 opacity-30 transition-transform duration-700 group-hover:scale-105" 
+          style={{ backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.4) 1px, transparent 0)", backgroundSize: "24px 24px" }}
+        />
+        <div className="absolute inset-0 flex items-center p-6 md:p-8 z-10 text-white">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 w-full">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-md">
+                  <Zap className="w-6 h-6 md:w-8 md:h-8 text-white" />
                 </div>
-                <p className="text-green-100/80 text-sm md:text-lg max-w-xl font-medium">
-                  Registre el suministro de alimento para su activo o lote.
-                </p>
+                <h2 className="text-xl md:text-3xl font-bold font-roboto tracking-tight">
+                  Registrar Evento
+                </h2>
               </div>
+              <p className="text-white/90 font-inter text-sm md:text-lg max-w-xl font-medium">
+                Registre el suministro de alimento para su activo o lote.
+              </p>
             </div>
           </div>
         </div>

@@ -4,6 +4,9 @@ import alertService from "@shared/utils/alertService";
 import { useAuthStore } from "@shared/store/authStore";
 import { useFeedingStore } from "@shared/store/feedingStore";
 import { FeedingEventForm } from "./FeedingEventForm";
+import { SkeletonList } from "../../../components/ui/Skeleton";
+import { EmptyState } from "../../../components/ui/EmptyState";
+import { ConfirmDialog } from "../../../components/ui/ConfirmDialog";
 
 export function FeedingEventsList() {
   const [viewMode, setViewMode] = useState("list");
@@ -18,7 +21,7 @@ export function FeedingEventsList() {
 
   useEffect(() => {
     fetchEventsByFarm(farmId);
-  }, [farmId]);
+  }, [farmId, fetchEventsByFarm]);
 
   const filteredEvents = (events ?? []).filter(
     (e) =>
@@ -33,13 +36,6 @@ export function FeedingEventsList() {
   };
 
   const handleCancelEvent = async (id) => {
-    const result = await alertService.confirm(
-      "¿Estás seguro de cancelar este evento?",
-      "Confirmar Cancelación",
-      "Sí, cancelar",
-      "No",
-    );
-    if (!result.isConfirmed) return;
     try {
       await cancelEventInStore(id, farmId);
       alertService.success("Evento cancelado", "Éxito");
@@ -60,9 +56,12 @@ export function FeedingEventsList() {
 
   if (!farmId) {
     return (
-      <div className="p-8 text-center text-gray-500">
-        Selecciona una granja para ver los registros.
-      </div>
+      <EmptyState 
+        title="Seleccione una granja" 
+        description="Por favor, selecciona una granja para ver el historial de alimentación." 
+        actionLabel={null}
+        icon={Calendar}
+      />
     );
   }
 
@@ -72,15 +71,15 @@ export function FeedingEventsList() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-farm-green-100">
-        <div>
-          <h2 className="text-2xl font-bold text-farm-green-900">
+        <div className="text-center md:text-left">
+          <h2 className="text-2xl font-bold font-roboto text-farm-green-900">
             Historial de Alimentación
           </h2>
-          <p className="text-gray-500">Registro de eventos de consumo</p>
+          <p className="text-gray-500 font-inter">Registro de eventos de consumo</p>
         </div>
         <button
           onClick={() => setViewMode("create")}
-          className="flex items-center gap-2 bg-farm-green-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-farm-green-700 transition-all shadow-lg shadow-farm-green-200"
+          className="flex items-center justify-center gap-2 bg-farm-green-600 text-white min-h-[44px] min-w-[44px] px-6 py-3 rounded-xl font-bold font-inter hover:bg-farm-green-700 transition-all shadow-lg shadow-farm-green-200 w-full md:w-auto"
         >
           <Plus className="w-5 h-5" />
           Registrar Evento
@@ -95,74 +94,82 @@ export function FeedingEventsList() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Buscar por producto o animal..."
-          className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-farm-green-500 focus:border-transparent outline-none transition-all"
+          className="w-full pl-12 pr-4 py-3 min-h-[44px] rounded-xl border border-gray-200 focus:ring-2 focus:ring-farm-green-500 focus:border-transparent outline-none transition-all font-inter"
         />
       </div>
 
       {/* Loading/Error/List */}
       {loading ? (
-        <div className="flex justify-center p-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-farm-green-600"></div>
-        </div>
+        <SkeletonList count={4} />
       ) : error ? (
-        <div className="bg-red-50 text-red-600 p-4 rounded-xl text-center">
-          {error}{" "}
-          <button onClick={refetch} className="underline ml-2">
+        <div className="bg-red-50 text-red-600 p-6 rounded-xl text-center min-h-[44px] flex flex-col items-center justify-center border border-red-100">
+          <span className="font-bold text-lg mb-2">Ha ocurrido un error</span>
+          <p className="mb-4">{error}</p>
+          <button onClick={refetch} className="underline font-medium hover:text-red-700 min-h-[44px] min-w-[44px] px-6 py-2 bg-red-100 rounded-lg">
             Reintentar
           </button>
         </div>
       ) : filteredEvents.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-3xl border border-gray-100 border-dashed">
-          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Calendar className="w-8 h-8 text-gray-300" />
-          </div>
-          <p className="text-gray-500">
-            No hay registros de alimentación para esta granja.
-          </p>
-        </div>
+        <EmptyState 
+          title="Sin registros" 
+          description="No hemos encontrado registros para esta granja o búsqueda."
+          actionLabel="+ Registrar Nuevo Evento"
+          onAction={() => setViewMode("create")}
+          icon={Calendar}
+        />
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="flex flex-col gap-4">
           {filteredEvents.map((event) => (
             <div
               key={event.id}
-              className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 hover:shadow-md transition-all"
+              className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between md:items-center gap-4 hover:shadow-md transition-all md:h-[96px]"
             >
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-farm-green-50 rounded-xl text-farm-green-600">
+              <div className="flex items-start md:items-center gap-4">
+                <div className="p-3 bg-farm-green-50 rounded-xl text-farm-green-600 shrink-0">
                   <Calendar className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-gray-900">
+                  <h3 className="font-bold font-roboto text-lg text-gray-900 leading-tight">
                     {event.productName || "Producto desconocido"}
                   </h3>
-                  <p className="text-sm text-gray-500">
-                    {new Date(event.date).toLocaleDateString()} -{" "}
+                  <p className="text-sm text-gray-500 font-inter mt-1">
+                    {new Date(event.date).toLocaleDateString()} &bull;{" "}
                     {event.animalName
                       ? `Animal: ${event.animalName}`
                       : `Lote: ${event.batchName || "N/A"}`}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-6">
-                <div className="text-right">
+              
+              <div className="flex items-center justify-between md:justify-end gap-6 mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 border-gray-100">
+                <div className="text-left md:text-right">
                   <span className="block font-bold text-lg text-farm-green-700">
                     {event.quantity} kg
                   </span>
-                  <span className="text-xs text-gray-400">Cantidad</span>
+                  <span className="text-xs text-gray-400 font-inter uppercase tracking-wider">Cantidad</span>
                 </div>
-                <div className="text-right">
+                <div className="text-left md:text-right">
                   <span className="block font-bold text-lg text-gray-700">
                     ${event.cost || 0}
                   </span>
-                  <span className="text-xs text-gray-400">Costo</span>
+                  <span className="text-xs text-gray-400 font-inter uppercase tracking-wider">Costo</span>
                 </div>
-                <button
-                  onClick={() => handleCancelEvent(event.id)}
-                  className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                  title="Cancelar evento"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
+                <ConfirmDialog
+                  title="Confirmar Cancelación"
+                  description="Esta acción no se puede deshacer. ¿Deseas cancelar definitivamente este evento?"
+                  confirmText="Sí, Cancelar"
+                  cancelText="No, Mantener"
+                  variant="danger"
+                  onConfirm={() => handleCancelEvent(event.id)}
+                  trigger={
+                    <button
+                      className="min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all border border-transparent hover:border-red-100"
+                      title="Cancelar evento"
+                    >
+                      <Trash2 className="w-5 h-5 mx-auto" />
+                    </button>
+                  }
+                />
               </div>
             </div>
           ))}
