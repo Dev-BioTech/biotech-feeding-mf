@@ -95,9 +95,9 @@ export function FeedingEventsList() {
 
   return (
     <div className="space-y-6">
-      {/* Header Banner */}
+      {/* Header Banner Totalmente Integrado */}
       <motion.div
-        className="mb-6 md:mb-8 relative overflow-hidden rounded-2xl md:rounded-3xl group shadow-lg"
+        className="mb-6 relative overflow-hidden rounded-none md:rounded-b-3xl group shadow-none"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
